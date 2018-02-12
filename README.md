@@ -75,7 +75,8 @@ This See [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-ad
 
 ## TODO
 
-Add/update the tests. This package has not added or altered any tests, and the [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) from which it was forked mentions that it could use more tests. Use "as is".
+  - Put some more thought into how to perhaps access the rooms that satisfy wildcard requests more quickly than going through all the rooms. Likely by pre-populating wildcard combinations and getting back into the `add`/`del` hooks?
+  - Add/update the tests. This package has not added or altered any tests, and the [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) from which it was forked mentions that it could use more tests. Use "as is".
 
 ## License
 
