@@ -49,11 +49,12 @@ primus.adapter = new ReverseWildcardAdapter();
 ### Targeting broadcasts to rooms that match wildcards
 
 Let's say you have the following scenario:
-  - Your room naming scheme is `<organization_id>:<role>`
-  - Client 'A' is connected to room `ORG1234:admin`
-  - Client 'B' is connected to room `ORG1234:guest`
+  - Your room naming convention is `<organization_id>:<role>`
+  - Client 'A' on organization `ORG1234` is an `admin` and is therefore connected to room `ORG1234:admin`
+  - Client 'B' on organization `ORG1234` is a `guest` and is therefore connected to room `ORG1234:guest`
 
-To target a broadcast to all clients of organization ID `ORG1234` you can do the following:
+To target a broadcast to all clients with an `organization_id` of `ORG1234` regardless of their `role` you can do the following:
+
 ```javascript
 var data = {foo: 'bar'};
 // Client A and Client B both receive this message.
@@ -61,6 +62,7 @@ primus.room('ORG1234:*').write(data);
 ```
 
 You can still target "only admins of ORG1234" as you would expect:
+
 ```javascript
 var data = {foo: 'bar'};
 // Client A only receives this message. Client B does not receive this message.
