@@ -73,6 +73,10 @@ primus.room('ORG1234:admin').write(data);
 
 This See [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) documentation for details. This package has not changed that API.
 
+## TODO
+
+Add/update the tests. This package has not added or altered any tests, and the [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) from which it was forked mentions that it could use more tests. Use "as is".
+
 ## License
 
 (The MIT License)
