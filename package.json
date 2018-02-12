@@ -1,8 +1,8 @@
 {
-  "name": "primus-rooms-adapter",
-  "version": "0.3.2",
-  "description": "In-memory default adapter for primus-rooms-adapter, use as abstract class",
-  "author": "Jonathan Brumley <cayasso@gmail.com>",
+  "name": "primus-rooms-reverse-wildcard-adapter",
+  "version": "0.0.1",
+  "description": "Adapter for primus-rooms-adapter that allows for targeting rooms using wildcards.",
+  "author": "Christopher W Newhouse <c.newhouse@gmail.com>",
   "homepage": "https://github.com/cayasso/primus-rooms-adapter",
   "main": "index.js",
   "scripts": {
@@ -10,12 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/cayasso/primus-rooms-adapter.git"
+    "url": "https://github.com/newhouse/primus-rooms-reverse-wildcard-adapter"
   },
   "keywords": [
     "primus",
     "primus-rooms",
     "rooms",
+    "primus-rooms-wildcard",
+    "primus-wildcard",
+    "rooms-wildcard",
     "store",
     "memory",
     "engine",
@@ -27,8 +30,6 @@
     "extendible": "0.1.x"
   },
   "devDependencies": {
-    "expect.js": "^0.3.1",
-    "mocha": "^2.5.3",
-    "pre-commit": "^1.1.1"
+    "expect.js": "^0.3.1"
   }
 }
