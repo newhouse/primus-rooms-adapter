@@ -1,101 +1,81 @@
-# primus-rooms-adapter
+# primus-rooms-reverse-wildcard-adapter
 
-[![Build Status](https://img.shields.io/travis/cayasso/primus-rooms-adapter/master.svg)](https://travis-ci.org/cayasso/primus-rooms-adapter)
-[![NPM version](https://img.shields.io/npm/v/primus-rooms-adapter.svg)](https://www.npmjs.com/package/primus-rooms-adapter)
-
-In-memory default adapter for `primus-rooms`.
+An adapter for [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) that is identical to [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) except that the wildcard behavior is reversed.
 
 ## Installation
 
 ```
-$ npm install primus-rooms-adapter
+$ npm install primus-rooms-reverse-wildcard-adapter
 ```
+
+
+## Description
+
+The good people who've built the Primus real-time framework and, in particular, the [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) plugin kindly included support for wildcards in the room naming system. However, for my use case it was implemented in the reverse direction that I would want to use. This package is merely a change/extension of the default [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) that sets up the behavior in reverse.
 
 ## Usage
 
-Use this adapter as an abstract class for creating your own custom 'primus-rooms' adapter.
+### Using the ReverseWildcardAdapter adapter with Rooms
 
-
-```javascript
-
-var util = require('util');
-var Adapter = require('primus-rooms-adapter');
-
-function MyAdapter() {
-  Adapter.call(this);
-}
-
-util.inherits(MyAdapter, Adapter);
-
-Adapter.prototype.broadcast = function broadcast(data, opts, clients) {
-  // Do my custom broadcast here, it could be sending to a database
-};
-
-```
-
-Then you can set your custom adapter for rooms, like this:
+Pass the adapter instance as an argument to Primus.plugins.rooms like so:
 
 ```javascript
-primus.use('rooms', Rooms);
+var Primus = require('primus');
+var Rooms = require('primus-rooms');
+var ReverseWildcardAdapter = require('primus-rooms-reverse-wildcard-adapter');
 
-// by setting the property
-primus.adapter = new MyAdapter();
-```
+var reverseWildcardAdapter = new ReverseWildcardAdapter();
 
-or pass the adapter instance as argument to Primus like so:
-
-```javascript
-var myAdapter = new MyAdapter();
 var primus = new Primus(url, {
-  transformer: 'sockjs',
-  rooms: { adapter: myAdapter }
+  transformer: 'ws',
+  rooms: { adapter: reverseWildcardAdapter },
+  plugins: {
+    rooms: Rooms
+  }
 });
 ```
 
-## API (Abstract public methods).
+Or set your custom adapter for rooms, like this (I could not get this to work for me, but it's consistently noted as a way to do the same thing as above):
 
-### adapter.add(id, room, fn)
+```javascript
+var ReverseWildcardAdapter = require('primus-rooms-reverse-wildcard-adapter');
 
-Adds a socket to a room.
+primus.use('rooms', Rooms);
 
-### adapter.get(id, fn)
+// by setting the property
+primus.adapter = new ReverseWildcardAdapter();
+```
 
-Get rooms socket is subscribed to or get all rooms in the server if an id is not passed.
+### Targeting broadcasts to rooms that match wildcards
 
-### adapter.del(id, room, fn)
+Let's say you have the following scenario:
+  - Your room naming scheme is `<organization_id>:<role>`
+  - Client 'A' is connected to room `ORG1234:admin`
+  - Client 'B' is connected to room `ORG1234:guest`
 
-Removes a socket from a room or from all rooms if a room is not passed.
+To target a broadcast to all clients of organization ID `ORG1234` you can do the following:
+```javascript
+var data = {foo: 'bar'};
+// Client A and Client B both receive this message.
+primus.room('ORG1234:*').write(data);
+```
 
-### adapter.broadcast(data, opts, clients)
+You can still target "only admins of ORG1234" as you would expect:
+```javascript
+var data = {foo: 'bar'};
+// Client A only receives this message. Client B does not receive this message.
+primus.room('ORG1234:admin').write(data);
+```
 
-Broadcasts a packet.
+## API (Abstract public methods)
 
-### adapter.clients(room, fn)
-
-Get client ids connected to this room.
-
-### adapter.empty(room, fn)
-
-Remove all sockets from a room.
-
-### adapter.isEmpty(room, fn)
-
-Check to see if a room is empty.
-
-### adapter.clear(fn)
-
-Reset store.
-
-
-## TODO
-
-Add more tests.
+This See [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) documentation for details. This package has not changed that API.
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2013 Jonathan Brumley &lt;cayasso@gmail.com&gt;
+Copyright (c) 2013 Jonathan Brumley &lt;cayasso@gmail.com&gt; and 2018 Christopher Newhouse &lt;c.newhouse@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
