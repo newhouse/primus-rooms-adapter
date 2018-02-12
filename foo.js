@@ -6,12 +6,12 @@ const WILDCARD = '*';
 const connections = [
 	{
 		sparkId: '1',
-		room: 'ORG123:admin'
+		room: 'ORG123:4:admin'
 	},
-	{
-		sparkId: '2',
-		room: 'ORG123:guest'
-	}
+	// {
+	// 	sparkId: '2',
+	// 	room: 'ORG123:1:guest'
+	// }
 ];
 
 const rooms = {};
@@ -22,12 +22,25 @@ function splitApart(room) {
 
 function add(sparkId, room) {
 	const pieces = splitApart(room);
+	let cursor = rooms;
 
-	if (pieces.length) _.update(rooms, pieces, value => {
-		value = value || [];
-		value.push(sparkId);
-		return value;
+	console.log({pieces});
+
+	const piecesLength = pieces.length;
+	let lastPiece;
+
+	pieces.forEach(piece => {
+		lastPiece = piece;
+		cursor = cursor[piece] = cursor[piece] || {};
 	});
+
+	cursor[lastPiece] = undefined;
+
+	// if (pieces.length) _.set(rooms, pieces);
+	// if (pieces.length) _.setWith(rooms, pieces, undefined, (nsValue, key, nsObject) => {
+	// 	console.log({nsValue, key, nsObject});
+	// 	return key;
+	// });
 }
 
 function match(target, matched = []) {
@@ -35,19 +48,23 @@ function match(target, matched = []) {
 
 	const pieces = splitApart(target);
 
-	const piecesLength = pieces.length;
+	const piecesProcessed = [];
+	const cursor = rooms;
 
-	pieces.forEach((piece, i) => {
-		const onLast = (i + 1) == piecesLength;
-		
-		if (piece !== '*') {
-			if (i + 1)
-		}
-		else {
+	pieces.forEach(piece => {
 
-		}
-	});
+		processPiece(piece, cursor);
+	})
 
+}
+
+function processPiece(piece, cursor) {
+	if (piece === '*') {
+		return cursor;
+	}
+	else {
+		return cursor[piece];
+	}
 }
 
 connections.forEach(connection => {
@@ -59,7 +76,7 @@ connections.forEach(connection => {
 	add(sparkId, room);
 })
 
-// console.log(JSON.stringify(rooms));
-console.log(rooms);
+console.log(JSON.stringify(rooms));
+// console.log(rooms);
 
-console.log(match('ORG123:*'));
+// console.log(match('ORG123:*'));
