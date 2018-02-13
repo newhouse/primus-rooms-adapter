@@ -1,6 +1,6 @@
 {
   "name": "primus-rooms-reverse-wildcard-adapter",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Adapter for primus-rooms-adapter that allows for targeting rooms using wildcards.",
   "author": "Christopher W Newhouse <c.newhouse@gmail.com>",
   "homepage": "https://github.com/cayasso/primus-rooms-adapter",
@@ -30,6 +30,7 @@
     "extendible": "0.1.x"
   },
   "devDependencies": {
-    "expect.js": "^0.3.1"
+    "expect.js": "^0.3.1",
+    "mocha": "^5.0.0"
   }
 }

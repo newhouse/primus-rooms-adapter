@@ -1,6 +1,6 @@
 # primus-rooms-reverse-wildcard-adapter
 
-An adapter for [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) that is identical to [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) except that the wildcard behavior is reversed.
+An adapter for [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) that is identical to [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) except that the wildcard behavior has been flipped around and modified.
 
 ## Installation
 
@@ -11,11 +11,13 @@ $ npm install primus-rooms-reverse-wildcard-adapter
 
 ## Description
 
-The good people who've built the Primus real-time framework and, in particular, the [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) plugin kindly included support for wildcards in the room naming system. However, for my use case it was implemented in the reverse direction that I would want to use. This package is merely a change/extension of the default [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) that sets up the behavior in reverse.
+The good people who've built the Primus real-time framework and, in particular, the [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) plugin kindly included support for wildcards in the room naming system. However, for my use case it was implemented in the reverse direction that I would want to use. This package is a change/extension of the default [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) that sets up the behavior in reverse, with some modifications and additional rules. Probably best to understand by looking at the rest of the documentation and examples below.
 
 ## Usage
 
 ### Using the ReverseWildcardAdapter adapter with Rooms
+
+To make use of this package, you must use it at the adapter for `primus-rooms`. There are a few ways to get this done:
 
 Pass the adapter instance as an argument to Primus.plugins.rooms like so:
 
@@ -69,14 +71,66 @@ var data = {foo: 'bar'};
 primus.room('ORG1234:admin').write(data);
 ```
 
+
+### Notable usage examples
+
+1) This package is made most powerful by the use of "sub-rooms" in your room naming convention. Sub-rooms allow for more granular targeting of rooms using wildcards. Sub-rooms need to be delimitted (see options below for more). Sub-rooms can be as deep or as shallow as you like. Examples:
+
+```javascript
+// This Client A has previously joined room `USA:skiing:halfpipe`
+const clientA;
+// This Client B has previously joined room `USA:snowboarding:halfpipe`
+const clientB;
+
+// Both Client A and Client B receive this message
+primus.room('USA:*:halfpipe').write(data);
+```
+
+2) Wildcards can only be used to match an entire sub-room. You cannot use a wildcard as only part of a sub-room's string identifier. Wildcard patterns that are present as only part of a sub-room's identifier will be treated as literals. **There are no regular expressions used in this package**. Example:
+
+```javascript
+// This Client A has previously joined room `USA:NewJersey:07901`
+const clientA;
+
+// Client A will *not* receive this message
+primus.room('USA:NewJersey:079*').write(data);
+```
+
+3) Rooms that match a given wildcard targeting pattern must be occupied by any clients you are hoping to reach. This package does not alter the way that `primus-rooms` assigns clients to rooms; it merely translates a wilcard pattern into an array of rooms ids that match that pattern, and then messages any clients in those rooms. Example:
+
+```javascript
+// This Client A has previously joined room `USA:NewJersey:Summit`
+const clientA;
+
+// This Client B has previously joined room `USA:NewJersey`
+const clientB;
+
+// Client A will *not* receive this message because it is not a member of the
+// 'USA:NewJersey' room (or any 2-part room with 'USA' as the primary room).
+// Client B will receive this message.
+primus.room('USA:*').write(data);
+
+// Client A will receive this message.
+// Client B will *not* receive this message because it is not a member of the
+// 'USA:NewJersey:Summit' room (or any 3-part room with 'USA' as the primary room).
+primus.room('USA:*:*').write(data);
+```
+
+
 ## API (Abstract public methods)
 
 This See [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) documentation for details. This package has not changed that API.
 
-## TODO
+In addition to the inherited API mentioned above, `primus-rooms-reverse-wildcard-adapter` does support some additional settings/options. Here they are with their defaults listed and a brief description:
+  1. `enabled: true`: Boolean indicating whether or not the wildcard-portion of this adapter should actually perform wildcard-related actions. Perhaps you want to disable it sometimes or for some reason, and this is your way.
+  2. `delimitter: ':'`: String indicating what delimitter your room naming convention uses. This is what will be used to split up rooms being targeted for broadcasts in order to find all other rooms that match the target pattern.
+  3. `wildcarIndicator: '*'`: String indicating what character(s) should be consisdered a "wildcard". Perhaps the default `*` is significant in your realm and you want to change it, and this is your way.
+  4. `occupiedKey: '_o'`: String to be used internally by the wildcard plugin for managing which rooms and room paths are occupied. Perhaps in your world you will be naming rooms or sub-rooms `_o`, and this is your way to make that screw up the wildcard internals.
 
-  - Put some more thought into how to perhaps access the rooms that satisfy wildcard requests more quickly than going through all the rooms. Likely by pre-populating wildcard combinations and getting back into the `add`/`del` hooks?
-  - Add/update the tests. This package has not added or altered any tests, and the [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) from which it was forked mentions that it could use more tests. Use "as is".
+## Tests
+
+I have written some decent test coverage of the behavior. You can see it in `tests.js`, and run it via:
+`npm test`
 
 ## License
 
