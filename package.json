@@ -27,8 +27,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "extendible": "0.1.x",
-    "lodash": "^4.17.5"
+    "extendible": "0.1.x"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
