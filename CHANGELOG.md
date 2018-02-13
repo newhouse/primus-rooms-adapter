@@ -1,3 +1,5 @@
+- 1.0.0:
+    + Moving to 1.0.0 so it doesn't look so scary.
 - 0.0.5:
     + Updated README.
     + Updated `package.json` keywords.
