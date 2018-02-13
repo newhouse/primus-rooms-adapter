@@ -11,7 +11,7 @@ $ npm install primus-rooms-reverse-wildcard-adapter
 
 ## Description
 
-The good people who've built the Primus real-time framework and, in particular, the [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) plugin kindly included support for wildcards in the room naming system. However, for my use case it was implemented in the reverse direction that I would want to use. This package is a change/extension of the default [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) that sets up the behavior in reverse, with some modifications and additional rules.
+The good people who've built the Primus real-time framework and, in particular, the [`primus-rooms`](https://www.npmjs.com/package/primus-rooms) plugin kindly included support for wildcards in the room naming system. However, for my use case it was implemented in the reverse direction that I would want to use. This package is a change/extension of the default [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-adapter) that sets up the behavior in reverse, with some modifications and additional rules. Probably best to understand by looking at the rest of the documentation and examples below.
 
 ## Usage
 
@@ -74,7 +74,7 @@ primus.room('ORG1234:admin').write(data);
 
 ### Notable usage examples
 
-  - This package is made most powerful by the use of "sub-rooms" in your room naming convention. Sub-rooms allow for more granular targeting of rooms using wildcards. Sub-rooms need to be delimitted (see options below for more). Sub-rooms can be as deep or as shallow as you like. Examples:
+1) This package is made most powerful by the use of "sub-rooms" in your room naming convention. Sub-rooms allow for more granular targeting of rooms using wildcards. Sub-rooms need to be delimitted (see options below for more). Sub-rooms can be as deep or as shallow as you like. Examples:
 
 ```javascript
 // This Client A has previously joined room `USA:skiing:halfpipe`
@@ -86,8 +86,7 @@ const clientB;
 primus.room('USA:*:halfpipe').write(data);
 ```
 
-
-  - Wildcards can only be used to match an entire sub-room. You cannot use a wildcard as only part of a sub-room's string identifier. Wildcard patterns that are present as only part of a sub-room's identifier will be treated as literals. **There are no regular expressions used in this package**. Example:
+2) Wildcards can only be used to match an entire sub-room. You cannot use a wildcard as only part of a sub-room's string identifier. Wildcard patterns that are present as only part of a sub-room's identifier will be treated as literals. **There are no regular expressions used in this package**. Example:
 
 ```javascript
 // This Client A has previously joined room `USA:NewJersey:07901`
@@ -97,8 +96,7 @@ const clientA;
 primus.room('USA:NewJersey:079*').write(data);
 ```
 
-
-  - Rooms that match a given wildcard targeting pattern must be occupied by any clients you are hoping to reach. This package does not alter the way that `primus-rooms` assigns clients to rooms; it merely translates a wilcard pattern into an array of rooms ids that match that pattern, and then messages any clients in those rooms. Example:
+3) Rooms that match a given wildcard targeting pattern must be occupied by any clients you are hoping to reach. This package does not alter the way that `primus-rooms` assigns clients to rooms; it merely translates a wilcard pattern into an array of rooms ids that match that pattern, and then messages any clients in those rooms. Example:
 
 ```javascript
 // This Client A has previously joined room `USA:NewJersey:Summit`
@@ -108,13 +106,13 @@ const clientA;
 const clientB;
 
 // Client A will *not* receive this message because it is not a member of the
-// 'USA:NewJersey' room (or any 2-part room with 'USA' as the first sub-room).
+// 'USA:NewJersey' room (or any 2-part room with 'USA' as the primary room).
 // Client B will receive this message.
 primus.room('USA:*').write(data);
 
 // Client A will receive this message.
 // Client B will *not* receive this message because it is not a member of the
-// 'USA:NewJersey:Summit' room (or any 3-part room with 'USA' as the first sub-room).
+// 'USA:NewJersey:Summit' room (or any 3-part room with 'USA' as the primary room).
 primus.room('USA:*:*').write(data);
 ```
 
