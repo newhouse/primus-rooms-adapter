@@ -74,7 +74,7 @@ primus.room('ORG1234:admin').write(data);
 
 ### Notable usage examples
 
-1) This package is made most powerful by the use of "sub-rooms" in your room naming convention. Sub-rooms allow for more granular targeting of rooms using wildcards. Sub-rooms need to be delimitted (see options below for more). Sub-rooms can be as deep or as shallow as you like. Examples:
+This package is made most powerful by the use of "sub-rooms" in your room naming convention. Sub-rooms allow for more granular targeting of rooms using wildcards. Sub-rooms need to be delimitted (see options below for more). Sub-rooms can be as deep or as shallow as you like. Examples:
 
 ```javascript
 // This Client A has previously joined room `USA:skiing:halfpipe`
@@ -86,7 +86,7 @@ const clientB;
 primus.room('USA:*:halfpipe').write(data);
 ```
 
-2) Wildcards can only be used to match an entire sub-room. You cannot use a wildcard as only part of a sub-room's string identifier. Wildcard patterns that are present as only part of a sub-room's identifier will be treated as literals. **There are no regular expressions used in this package**. Example:
+Wildcards can only be used to match an entire sub-room. You cannot use a wildcard as only part of a sub-room's string identifier. Wildcard patterns that are present as only part of a sub-room's identifier will be treated as literals. **There are no regular expressions used in this package**. Example:
 
 ```javascript
 // This Client A has previously joined room `USA:NewJersey:07901`
@@ -96,7 +96,7 @@ const clientA;
 primus.room('USA:NewJersey:079*').write(data);
 ```
 
-3) Rooms that match a given wildcard targeting pattern must be occupied by any clients you are hoping to reach. This package does not alter the way that `primus-rooms` assigns clients to rooms; it merely translates a wilcard pattern into an array of rooms ids that match that pattern, and then messages any clients in those rooms. Example:
+Rooms that match a given wildcard targeting pattern must be occupied by any clients you are hoping to reach. This package does not alter the way that `primus-rooms` assigns clients to rooms; it merely translates a wilcard pattern into an array of rooms ids that match that pattern, and then messages any clients in those rooms. Example:
 
 ```javascript
 // This Client A has previously joined room `USA:NewJersey:Summit`
@@ -124,8 +124,8 @@ This See [`primus-rooms-adapater`](https://www.npmjs.com/package/primus-rooms-ad
 In addition to the inherited API mentioned above, `primus-rooms-reverse-wildcard-adapter` does support some additional settings/options. Here they are with their defaults listed and a brief description:
   1. `enabled: true`: Boolean indicating whether or not the wildcard-portion of this adapter should actually perform wildcard-related actions. Perhaps you want to disable it sometimes or for some reason, and this is your way.
   2. `delimitter: ':'`: String indicating what delimitter your room naming convention uses. This is what will be used to split up rooms being targeted for broadcasts in order to find all other rooms that match the target pattern.
-  3. `wildcarIndicator: '*'`: String indicating what character(s) should be consisdered a "wildcard". Perhaps the default `*` is significant in your realm and you want to change it, and this is your way.
-  4. `occupiedKey: '_o'`: String to be used internally by the wildcard plugin for managing which rooms and room paths are occupied. Perhaps in your world you will be naming rooms or sub-rooms `_o`, and this is your way to make that screw up the wildcard internals.
+  3. `wildCardIndicator: '*'`: String indicating what character(s) should be consisdered a "wildcard". Perhaps the default `*` is significant in your realm and you want to change it, and this is your way.
+  4. `occupiedKey: '_o'`: String to be used internally by the wildcard plugin for managing which rooms and room paths are occupied. Perhaps in your world you will be naming rooms or sub-rooms `_o`, and this is your way to make that not screw up the wildcard internals by using something else.
 
 ## Tests
 
@@ -136,7 +136,7 @@ I have written some decent test coverage of the behavior. You can see it in `tes
 
 (The MIT License)
 
-Copyright (c) 2013 Jonathan Brumley &lt;cayasso@gmail.com&gt; and 2018 Christopher Newhouse &lt;c.newhouse@gmail.com&gt;
+Copyright (c) 2018 Christopher Newhouse &lt;c.newhouse@gmail.com&gt; and 2013 Jonathan Brumley &lt;cayasso@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
